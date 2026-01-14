@@ -1,0 +1,109 @@
+// Bootstrap options
+$enable-caret:                true;
+$enable-rounded:              true;
+$enable-shadows:              true;
+$enable-gradients:            true;
+$enable-transitions:          true;
+$enable-reduced-motion:       true;
+$enable-smooth-scroll:        true;
+$enable-grid-classes:         true;
+$enable-container-classes:    true;
+$enable-cssgrid:              false;
+$enable-button-pointers:      true;
+$enable-rfs:                  true;
+$enable-validation-icons:     true;
+$enable-negative-margins:     true;
+$enable-deprecation-messages: false;
+$enable-important-utilities:  true;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  // xl: 1140px,
+  // xxl: 1320px
+);
+
+// Colors
+$gray-100: #f8f9fa !default;
+$gray-200: #f2f1f7 !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+
+$body-bg: #fbfaf9;
+
+// Brand colors
+$primary: #673266;
+$blue: #0066b3;
+$orange: #f04f23;
+$yellow: #ac9155;
+$green: #00a650;
+$teal: #b3d334;
+$cyan: #00b9f2;
+
+$alternative: $green;
+$action: $orange;
+$success: #a1b49c;
+$danger: #E04F5F;
+$warning: $yellow;
+$info: $cyan;
+
+// nexso additional colors
+$nx-colors: (
+  "action": $action,
+  "alternative": $alternative,
+);
+
+$utilities: (
+  "opacity": (
+    property: opacity,
+    values: (
+      0: 0,
+      10: 0.1,
+      20: 0.2,
+      30: 0.3,
+      40: 0.4,
+      50: 0.5,
+      60: 0.6,
+      70: 0.7,
+      80: 0.8,
+      90: 0.9,
+      100: 1,
+    )
+  ),
+);
+
+// Typography
+$font-size-base: 1.1rem; // 11px
+$font-family-sans-serif: Calibri, Corbel, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+
+$grid-columns:      12;
+$grid-gutter-width: 1.6rem;
+
+$spacer: 2rem;
+
+// Buttons and Forms
+$input-btn-padding-y: $spacer * 0.4 !default;
+$input-btn-padding-x: $spacer * 0.8 !default;
+
+$input-btn-padding-y-sm: $spacer * 0.2 !default;
+$input-btn-padding-x-sm: $spacer * 0.4 !default;
+
+$input-btn-padding-y-lg: $spacer * 0.8 !default;
+$input-btn-padding-x-lg: $spacer * 1.2 !default;
+
+// Components
+$border-radius: .5rem !default;
+$border-radius-sm: .3rem !default;
+$border-radius-lg: .8rem !default;
+$border-radius-xl: 1rem !default;
+$border-radius-xxl: 2rem !default;
+$border-radius-pill: 50rem !default;
+
+// Nav
+$navbar-nav-link-padding-x: 1rem;

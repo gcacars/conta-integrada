@@ -1,0 +1,41 @@
+html, body {
+  min-height: 100vh;
+}
+
+body {
+  background-image: url('/img/bg.jpg');
+}
+
+.text-shadow {
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.font-serif {
+  font-family: 'Calisto MT', Constantia, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.mat-menu > .nav-item {
+  border: 1px solid transparent;
+  border-left: none;
+  border-right: none;
+}
+
+.mat-border, .mat-menu > .nav-item:hover, .mat-menu > .nav-item.active {
+  border: 1px solid $warning;
+  border-left: none;
+  border-right: none;
+}
+
+.mat-menu > .nav-item.active > .nav-link {
+  color: $warning !important;
+  font-weight: bold;
+}
+
+.mat-bloquote > p {
+  margin-bottom: 0 !important;
+}
