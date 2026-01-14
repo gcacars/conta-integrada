@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxt/eslint', '@nuxt/hints', '@nuxt/fonts', '@nuxt/scripts', '@pinia/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/hints', '@nuxt/fonts', '@nuxt/scripts', '@pinia/nuxt', '@nuxt/image'],
   css: [
     '@/assets/styles/bootstrap.scss',
     '@/assets/styles/main.scss',
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     head: {
       title: 'Conta Integrada',
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         // { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         // { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
         // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap', media: 'print', onload: 'this.media=\'all\'' },
@@ -69,7 +69,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "@/assets/styles/variables.scss"; @import "@modules/bootstrap/scss/_functions.scss"; @import "@modules/bootstrap/scss/_variables.scss"; @import "@modules/bootstrap/scss/_mixins.scss";',
+          additionalData: '@import "@modules/bootstrap/scss/_functions.scss"; @import "@/assets/styles/variables.scss"; @import "@modules/bootstrap/scss/_variables.scss"; @import "@modules/bootstrap/scss/_mixins.scss";',
           silenceDeprecations: ['global-builtin', 'import'],
         },
       },

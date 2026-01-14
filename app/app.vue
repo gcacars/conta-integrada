@@ -11,6 +11,7 @@ await financeStore.fetchBalances();
     <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator />
     <NuxtLayout>
+      <HeaderMenu />
       <NuxtPage />
     </NuxtLayout>
   </div>
