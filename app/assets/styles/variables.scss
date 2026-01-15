@@ -35,8 +35,6 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 
-$body-bg: #fff;
-
 // Brand colors
 $primary: #591902;
 $brown-light: #A66B37;
@@ -45,7 +43,7 @@ $green: #39594A;
 $green-light: #5E8C77;
 
 // Other colors
-$blue: #0066b3;
+$blue: #0d6efd;
 $orange: #f04f23;
 $yellow: #F2CB05;
 $teal: #b3d334;
@@ -55,12 +53,14 @@ $cyan: #00b9f2;
 $success: #038C3E;
 $danger: #F2522E;
 $warning: $yellow;
-$info: $green-light;
+$info: $blue;
 
 // nexso additional colors
 $nx-colors: (
   "alternative": $green,
 );
+
+$body-bg: mix(white, $primary, 97%);
 
 $utilities: (
   "opacity": (
@@ -82,13 +82,14 @@ $utilities: (
 );
 
 // Typography
+$small-font-size: 0.75em;
 // $font-size-base: 10px;
 // $font-family-sans-serif: Calibri, Corbel, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
 
 // $grid-columns:      12;
 // $grid-gutter-width: 1.6rem;
 
-// $spacer: 2rem;
+$spacer: 1.2rem;
 
 // Buttons and Forms
 // $input-btn-padding-y: $spacer * 0.4 !default;

@@ -13,7 +13,6 @@ onMounted(async () => {
 
   // Initialize Bootstrap dropdowns
   const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
-  console.log(dropdownElementList);
   [...dropdownElementList].map(el => new Dropdown(el));
 });
 </script>

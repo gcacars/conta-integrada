@@ -73,3 +73,10 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+# Resources
+
+## Bank Logos
+
+- [12 countries bank logos](https://prisma.truelayer.com/assets/bank-logos/#assets)
+- [Logos de bancos brasileiros](https://github.com/Tgentil/Bancos-em-SVG)
