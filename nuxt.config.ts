@@ -6,12 +6,32 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxt/eslint', '@nuxt/hints', '@nuxt/fonts', '@nuxt/scripts', '@pinia/nuxt', '@nuxt/image'],
+  modules: ['@nuxt/eslint', '@nuxt/hints', '@nuxt/fonts', '@nuxt/scripts', '@pinia/nuxt', '@nuxt/image', 'nuxt-auth-utils'],
   css: [
     '@/assets/styles/bootstrap.scss',
     '@/assets/styles/main.scss',
     '@/assets/styles/icons.scss',
   ],
+
+  runtimeConfig: {
+    session: {
+      name: 'nuxt-session',
+      password: process.env.NUXT_SESSION_PASSWORD || 'supersecret',
+      maxAge: 4 * 60 * 60, // 4 hours,
+      cookie: {
+        sameSite: 'lax'
+      },
+    },
+    mongoDb: {
+      uri: process.env.MONGO_URI || '',
+      dbName: process.env.MONGO_DB || 'conta-integrada-dev',
+      certPath: process.env.MONGO_CERT_PATH || '',
+    },
+  },
+
+  auth: {
+    webAuthn: true,
+  },
 
   app: {
     baseURL: '/',

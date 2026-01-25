@@ -80,3 +80,10 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 - [12 countries bank logos](https://prisma.truelayer.com/assets/bank-logos/#assets)
 - [Logos de bancos brasileiros](https://github.com/Tgentil/Bancos-em-SVG)
+
+## Autenticação
+
+- https://nuxt.com/docs/4.x/guide/recipes/sessions-and-authentication
+- https://github.com/atinux/nuxt-auth-utils?tab=readme-ov-file#webauthn-passkey
+- https://github.com/barbapapazes/nuxt-authorization
+- https://github.com/atinux/nuxt-auth-utils/blob/main/playground/server/api/login.post.ts

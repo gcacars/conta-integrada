@@ -1,17 +1,28 @@
 // server/utils/mongo.ts
-import { MongoClient } from 'mongodb'
-
-const uri = process.env.MONGO_URI;
-const dbName = process.env.MONGO_DB || 'site'
+import { MongoClient, ServerApiVersion } from 'mongodb'
 
 let client: MongoClient
 
-if (!uri) throw new Error('Sem URL do MongoDB');
+export async function useDatabase() {
+  const { mongoDb } = useRuntimeConfig();
 
-export async function getDb() {
+  if (!mongoDb?.uri) throw new Error('Sem URL do MongoDB');
+
   if (!client) {
-    client = new MongoClient(uri)
-    await client.connect()
+    try {
+      client = new MongoClient(mongoDb.uri, {
+        tlsCertificateKeyFile: mongoDb.certPath,
+        serverApi: ServerApiVersion.v1,
+        connectTimeoutMS: 10000,
+        maxIdleTimeMS: 10000,
+      })
+  
+      await client.connect()
+      console.log('✅ Connected to MongoDB')
+    } catch (error) {
+      console.error('❌ Failed to connect to MongoDB:', error)
+    }
   }
-  return client.db(dbName)
+
+  return client.db(mongoDb.dbName)
 }
