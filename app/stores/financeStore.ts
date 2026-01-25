@@ -1,36 +1,3 @@
-export interface Money {
-  amountInCents: number;
-  currency: string;
-  percentage?: number;
-}
-
-export interface Card {
-  brand: string;
-  title: string;
-  number: string;
-  current: Money;
-  invoiceDate: Date;
-}
-
-export interface BankAccount {
-  brand: string;
-  number: string;
-  current: Money;
-  income: Money;
-  expenses: Money;
-}
-
-export interface Balance {
-  income: Money;
-  expenses: Money;
-  currentBalance: Money;
-  projectedBalance: Money;
-  currency: string;
-  essentialExpenses?: Money | null;
-  otherExpenses?: Money | null;
-  investments?: Money | null;
-}
-
 export const useFinanceStore = defineStore('financeStore', {
   state: () => ({
     balances: [] as Balance[],

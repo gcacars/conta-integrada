@@ -1,3 +1,9 @@
+<script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticated'],
+})
+</script>
+
 <template>
   <LayoutPage>
     <div class="d-flex justify-content-between align-items-center">

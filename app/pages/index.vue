@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import CardWidget from '~/components/CardWidget.vue';
-import { useFinanceStore, type Money } from '~/stores/finance';
+import { useFinanceStore } from '~/stores/financeStore';
+import type { Money } from '#shared/types/finances';
 
+definePageMeta({
+  middleware: ['authenticated'],
+});
+
+const { user } = useUserSession();
 const financeStore = useFinanceStore();
 
 const essentialExpenses = computed(
@@ -26,7 +31,7 @@ const analyticalData = ref([
 <template>
   <LayoutPage>
     <div class="d-flex justify-content-between align-items-center">
-      <h5 class="card-title text-alternative">Boa tarde <b>Gabriel!</b></h5>
+      <h5 class="card-title text-alternative">Boa tarde <b>{{ user?.name }}</b></h5>
       <PeriodPicker />
     </div>
 

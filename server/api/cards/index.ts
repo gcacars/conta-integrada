@@ -1,4 +1,6 @@
 export default defineEventHandler(async (event) => {
+  // const { user } = await requireUserSession(event)
+  
   try {
     const method = event.node.req.method
 
