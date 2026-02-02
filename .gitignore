@@ -24,3 +24,4 @@ logs
 !.env.example
 app/transactions.json
 mongodb.pem
+conta-integrada-d947e60a12c0.json

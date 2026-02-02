@@ -80,6 +80,7 @@ export default defineWebAuthnAuthenticateEventHandler({
         id: user?._id.toHexString(),
         name: user?.name,
       },
+      secure: {},
       loggedInAt: Date.now(),
     })
   },

@@ -1,4 +1,5 @@
 import type { Money } from "./finances";
+import type { AccountType } from "./resources";
 import type { DocumentOwner } from "./user";
 
 export type TransactionType =
@@ -40,20 +41,21 @@ export interface TransactionCategory {
 }
 
 export interface Transaction extends DocumentOwner {
-  id: string;
+  _id: string;
   date: Date;
   description: string;
   amount: Money;
   type: TransactionType;
   status: 'PENDING' | 'CONFIRMED' | 'CANCELED';
-  categoryId?: string;
+  categoryId?: string | null;
   sourceId: string;
-  destinationId?: string;
+  sourceType: AccountType;
+  destinationId?: string | null;
+  destinationType?: AccountType | null;
   tags?: string[];
   attachmentsCount: number;
   recurrence?: TransactionRecurrence;
   createdAt: Date;
   updatedAt?: Date;
-  conciliationId?: string;
+  conciliationId?: string | null;
 }
-// sourceType: 'ACCOUNT' | 'CREDIT_CARD' | 'WALLET';

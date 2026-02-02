@@ -2,41 +2,47 @@
 import type { Transaction } from '#shared/types/transactions';
 import type { Offcanvas } from 'bootstrap';
 import useSystemStore from '~/stores/systemStore';
-// import ConsoleApi from '@/api/ConsoleApi';
 import { useAppStore } from '~/stores/appStore';
+import type { Account } from '~~/shared/types/resources';
 
 let offcanvasElement: HTMLElement | null;
 let offcanvas: Offcanvas | undefined;
 
-interface TransactionForm extends Omit<Transaction, 'date' | 'categoryId' | 'sourceId' | 'createdAt'> {
+interface TransactionForm extends Omit<Transaction, '_id' | 'date' | 'sourceId' | 'createdAt' | 'userId'> {
+  _id: string | null;
   date: Date | null;
-  categoryId: string | null;
   sourceId: string | null;
 }
 
+const { $api } = useNuxtApp();
 const router = useRouter();
+
+const emits = defineEmits(['close']);
 
 const props = defineProps({
   id: {
     type: String,
-    required: true,
+    required: false,
+    default: 'new',
   },
 });
 
 const appStore = useAppStore();
 const systemStore = useSystemStore();
-const consoleApi = {
-  getTransaction: (id: string) => Promise.resolve({ ok: false, data: {} }),
-  createParameter: (tx: TransactionForm) => Promise.resolve({ ok: false, data: tx }),
-  editParameter: (tx: TransactionForm) => Promise.resolve({ ok: false, data: tx }),
-}; // new ConsoleApi();
 
 const loading = ref(false);
 const sending = ref(false);
 const validated = ref(false);
-const amount = ref<number | null>(null);
 const transaction = ref<TransactionForm>();
 const txTypes = ref<TransactionTypeDisplay[]>(appStore.transactionTypes);
+const accounts = ref<Partial<Account>[]>([
+  { _id: '68c83604e8af579df8775474', name: 'Santander', type: 'CHECKING' },
+  { _id: '68d0abe1e8af579df877a543', name: 'Inter', type: 'CHECKING' },
+]);
+
+const formAmount = ref<number | null>(null);
+const formSource = ref<Account | null>(null);
+const formDestination = ref<Account | null>(null);
 
 const canEdit = computed(() => !transaction.value?.conciliationId);
 const typeGroups = computed(() => {
@@ -71,6 +77,11 @@ function setTransactionType(type: string, idx: number) {
   }
 }
 
+function closePanel() {
+  offcanvas?.hide();
+  emits('close');
+}
+
 async function getTransaction(id: string) {
   loading.value = true;
 
@@ -94,18 +105,36 @@ async function submit() {
   }
 
   const verbPrefix = props.id === 'new' ? 'adiciona' : 'edita';
-  const action = props.id !== 'new' ? consoleApi.editParameter : consoleApi.createParameter;
-  const result = await action(transaction.value);
 
-  if (result.ok) {
+  if (props.id === 'new') {
+    transaction.value._id = null;
+  }
+
+  try {
+    const result = await $api<Transaction>('/transactions', {
+      method: props.id === 'new' ? 'PUT' : 'PATCH',
+      body: {
+        ...transaction.value,
+        amount: {
+          amountInCents: formAmount.value ? Math.round(formAmount.value * 100) : 0,
+          currency: transaction.value.amount.currency,
+        },
+        sourceId: formSource.value ? formSource.value._id || null : null,
+        sourceType: formSource.value ? formSource.value.type as Account['type'] : undefined,
+        destinationId: formDestination.value ? formDestination.value._id || null : null,
+        destinationType: formDestination.value ? formDestination.value.type as Account['type'] : undefined,
+      },
+    });
+
     systemStore.addMessage(
-      `Transação ${result.data?.id} ${verbPrefix}da com sucesso!`, 'Sucesso', 'success', 'bi-check2-circle', 3,
+      `Transação ${result.description} ${verbPrefix}da com sucesso!`, 'Sucesso',
+      'success', 'bi-check2-circle', 3,
     );
 
     // Volta para a lista
-    offcanvas?.hide();
-  } else {
-    systemStore.addResultErrorMessage(result, `Não foi possível ${verbPrefix}r o parâmetro.`);
+    closePanel();
+  } catch (error) {
+    systemStore.addResultErrorMessage(error, `Não foi possível ${verbPrefix}r a transação.`);
     sending.value = false;
   }
 }
@@ -117,7 +146,7 @@ watch(() => props.id, (newValue) => {
     offcanvas.show();
     getTransaction(newValue);
   } else {
-    offcanvas.hide();
+    closePanel();
   }
 });
 
@@ -134,7 +163,7 @@ onMounted(async () => {
 
       if (props.id === 'new') {
         transaction.value = {
-          id: '',
+          _id: '',
           description: '',
           amount: { amountInCents: 0, currency: 'BRL' },
           attachmentsCount: 0,
@@ -155,7 +184,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   if (router) offcanvasElement?.removeEventListener('hide.bs.offcanvas', router.back);
-  offcanvas?.hide();
+  closePanel();
 });
 </script>
 
@@ -235,8 +264,8 @@ onUnmounted(() => {
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: max-content;">
                 <table class="table table-sm table-hover table-borderless mb-0">
                   <tbody>
-                    <tr v-for="currency in currencies" :key="currency.code"
-                        @click="transaction.amount.currency = currency.code" style="cursor: pointer;">
+                    <tr v-for="currency in appStore.currencies" :key="currency.code"
+                        style="cursor: pointer;" @click="transaction.amount.currency = currency.code">
                       <th class="px-3">{{ currency.symbol }}</th>
                       <td>{{ currency.label }}</td>
                       <td class="px-3">{{ currency.code }}</td>
@@ -245,7 +274,7 @@ onUnmounted(() => {
                 </table>
                 <!-- Table ends here -->
               </div>
-              <input id="tx_amount" v-model="amount" type="number" class="form-control" min="0" step="0.01"
+              <input id="tx_amount" v-model="formAmount" type="number" class="form-control" min="0" step="0.01"
                      :readonly="!canEdit" :required="canEdit">
             </div>
           </div>
@@ -267,24 +296,24 @@ onUnmounted(() => {
             <label for="tx_source" class="form-label">
               {{ transaction.type === 'TRANSFER' ? 'Conta de origem' : 'Conta ou cartão' }}
             </label>
-            <select id="tx_source" v-model="transaction.sourceId" class="form-select" aria-label="Conta ou cartão"
+            <select id="tx_source" v-model="formSource" class="form-select" aria-label="Conta ou cartão"
                     :disabled="!canEdit" :required="canEdit">
               <option value="">Selecione...</option>
-              <optgroup label="German Cars">
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
+              <optgroup v-for="account in accounts.filter(a => a.type === 'CHECKING')" :key="account._id"
+                        label="Conta Corrente">
+                <option :value="account">{{ account.name }}</option>
               </optgroup>
             </select>
           </div>
 
           <div v-if="transaction.type === 'TRANSFER'" class="mb-3">
             <label for="tx_source" class="form-label">Conta destino</label>
-            <select id="tx_source" v-model="transaction.destinationId" class="form-select" aria-label="Conta destino"
+            <select id="tx_source" v-model="formDestination" class="form-select" aria-label="Conta destino"
                     :disabled="!canEdit" :required="canEdit">
               <option value="">Selecione...</option>
-              <optgroup label="German Cars">
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
+              <optgroup v-for="account in accounts.filter(a => a.type === 'CHECKING')" :key="account._id"
+                        label="Conta Corrente">
+                <option :value="account">{{ account.name }}</option>
               </optgroup>
             </select>
           </div>

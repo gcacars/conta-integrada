@@ -19,21 +19,20 @@ onMounted(async () => {
 
 <template>
   <nav class="navbar navbar-expand-lg bg-transparent border-bottom border-primary">
-    <div class="container-fluid justify-content-center">
+    <div class="container justify-content-center">
       <a class="navbar-brand text-primary" href="#">Conta Integrada</a>
-      <div class="mx-auto">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-for="menu in menuItems" :key="menu.link" class="nav-item">
-            <NuxtLink class="nav-link active" aria-current="page" :to="menu.link"
-                      exact-active-class="active">
-              {{ menu.name }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
       <AuthState>
         <template #default="{ loggedIn, clear, user }">
-          <div v-if="loggedIn" class="dropdown text-end"> 
+          <div v-if="loggedIn" class="mx-auto">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li v-for="menu in menuItems" :key="menu.link" class="nav-item">
+                <NuxtLink class="nav-link active" aria-current="page" :to="menu.link" exact-active-class="active">
+                  {{ menu.name }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+          <div v-if="loggedIn" class="dropdown text-end">
             <a href="#"
               class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
               data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,7 +53,7 @@ onMounted(async () => {
               </li>
             </ul>
           </div>
-          <NuxtLink v-else to="/login" class="btn btn-primary">Entrar</NuxtLink>
+          <NuxtLink v-else to="/login" class="btn btn-primary ms-auto">Entrar</NuxtLink>
         </template>
         <template #placeholder>
           <div class="spinner-border" role="status">
