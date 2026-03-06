@@ -8,8 +8,11 @@ const { fetch: fetchUserSession, loggedIn } = useUserSession()
 
 const userName = ref('')
 const signingUp = ref(false)
+const checking = ref(false)
 
 async function submit() {
+  checking.value = true
+
   if (signingUp.value) {
     await register({ userName: userName.value })
       .then(fetchUserSession) // refetch the user session
@@ -18,6 +21,8 @@ async function submit() {
 
   await authenticate(userName.value)
     .then(fetchUserSession) // refetch the user session
+
+  checking.value = false
 }
 
 watch(loggedIn, (newVal) => {
@@ -35,7 +40,8 @@ watch(loggedIn, (newVal) => {
         <label for="username" class="form-label">E-mail</label>
         <input id="username" v-model="userName" type="email" class="form-control" autocomplete="email">
       </div>
-      <button type="submit" class="btn btn-primary mt-4 w-100">
+      <button type="submit" class="btn btn-primary mt-4 w-100" :disabled="checking">
+        <span v-if="checking" class="spinner-border spinner-border-sm" aria-hidden="true" />
         {{ signingUp ? 'Registrar' : 'Entrar' }}
       </button>
     </form>

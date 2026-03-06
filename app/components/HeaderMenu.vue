@@ -6,6 +6,14 @@ const menuItems = [
   { name: 'Orçamento', link: '/budget' },
 ];
 
+const { loggedIn } = useUserSession()
+
+watch(loggedIn, (newVal) => {
+  if (!newVal) {
+    navigateTo('/login')
+  }
+})
+
 onMounted(async () => {
   const { Dropdown } = await import('bootstrap');
 

@@ -43,7 +43,7 @@ onMounted(() => {
   </div>
 
   <template v-else>
-    <div class="d-flex align-items-stretch gap-3">
+    <div class="d-flex align-items-stretch gap-3 pb-2 overflow-x-scroll">
       <AccountWidget v-for="account in accounts" :key="account.number" :account="account"
                      class="bg-white shadow-sm" />
     </div>

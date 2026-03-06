@@ -65,8 +65,9 @@ export default defineWebAuthnAuthenticateEventHandler({
   async onSuccess(event, { credential, authenticationInfo }) {
     // The credential authentication has been successful
     // We can look it up in our database and get the corresponding user
-    const db = await useDatabase()
-    const user = await db.collection('users').findOne({ _id: credential.userId! })
+    const { db } = await useSecureClient()
+    const user = await db.collection<WithId<Omit<User, '_id'>>>('users')
+      .findOne({ _id: credential.userId! })
 
     if (!user) {
       throw createError({ statusCode: 404, message: 'User not found' })
