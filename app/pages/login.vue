@@ -4,7 +4,7 @@ const { register, authenticate } = useWebAuthn({
   authenticateEndpoint: '/api/webauthn/authenticate', // Default
 })
 
-const { fetch: fetchUserSession } = useUserSession()
+const { fetch: fetchUserSession, loggedIn } = useUserSession()
 
 const userName = ref('')
 const signingUp = ref(false)
@@ -19,6 +19,12 @@ async function submit() {
   await authenticate(userName.value)
     .then(fetchUserSession) // refetch the user session
 }
+
+watch(loggedIn, (newVal) => {
+  if (newVal) {
+    navigateTo('/')
+  }
+})
 </script>
 
 <template>

@@ -6,17 +6,14 @@ export default defineNuxtRouteMiddleware(async () => {
     return navigateTo('/login')
   }
 
-  const $route = useRoute()
+  try {
+    const appStore = useAppStore()
+    appStore.setLastInputDate(null)
+    appStore.setLastInputCategoryId(null)
+    appStore.setLastInputSourceId(null)
 
-  // if the user is already logged in, redirect away from the login page
-  if ($route.path === '/login') {
-    return navigateTo('/')
+    await callOnce('categories', () => appStore.getCategories())
+  } catch (error) {
+    console.error('Error in authenticated middleware:', error);
   }
-
-  const appStore = useAppStore()
-  appStore.setLastInputDate(null)
-  appStore.setLastInputCategoryId(null)
-  appStore.setLastInputSourceId(null)
-
-  await callOnce('categories', () => appStore.getCategories())
 })

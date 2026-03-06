@@ -1,14 +1,18 @@
+import { WebAuthnCredential } from 'nuxt-auth-utils';
+import { WithId } from 'mongodb'
+import { User } from '~~/shared/types/user'
+
 export default defineWebAuthnAuthenticateEventHandler({
   // Optionally, we can prefetch the credentials if the user gives their userName during login
   async allowCredentials(event, userName) {
-    const db = await useDatabase()
-    const user = await db.collection('users').findOne({ email: userName })
+    const { db } = await useSecureClient()
+    const user = await db.collection<User>('users').findOne({ email: userName })
 
     if (!user) {
       throw createError({ statusCode: 404, message: 'User not found' })
     }
 
-    const credentials = await db.collection('auth_credentials').find({ userId: user._id }).toArray()
+    const credentials = await db.collection<WithId<WebAuthnCredential>>('auth_credentials').find({ userId: user._id }).toArray()
     
     // If no credentials are found, the authentication cannot be completed
     if (!credentials.length)
@@ -24,7 +28,7 @@ export default defineWebAuthnAuthenticateEventHandler({
   async getCredential(event, credentialId) {
     // Look for the credential in our database
     const db = await useDatabase()
-    const credential = await db.collection('auth_credentials').findOne({ id: credentialId })
+    const credential = await db.collection<WithId<WebAuthnCredential>>('auth_credentials').findOne({ id: credentialId })
 
     // If the credential is not found, there is no account to log in to
     if (!credential)

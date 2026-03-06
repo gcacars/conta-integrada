@@ -1,7 +1,10 @@
-// server/utils/mongo.ts
+import type { Db , ClientEncryption } from 'mongodb';
 import { MongoClient, ServerApiVersion } from 'mongodb'
+import { getSecureClient } from '../../setup/database/client.ts';
 
 let client: MongoClient
+let secureClient: MongoClient
+let clientEncryption: ClientEncryption
 
 export async function useDatabase() {
   const { mongoDb } = useRuntimeConfig();
@@ -25,4 +28,16 @@ export async function useDatabase() {
   }
 
   return client.db(mongoDb.dbName)
+}
+
+export async function useSecureClient(): Promise<{ client: MongoClient, db: Db, clientEncryption: ClientEncryption }> {
+  const { mongoDb } = useRuntimeConfig();
+  
+  if (!secureClient) {
+    const secureConnection = await getSecureClient();
+    secureClient = secureConnection.client;
+    clientEncryption = secureConnection.clientEncryption;
+  }
+
+  return { client: secureClient, db: secureClient.db(mongoDb.dbName), clientEncryption }
 }

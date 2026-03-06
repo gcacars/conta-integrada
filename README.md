@@ -87,3 +87,12 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 - https://github.com/atinux/nuxt-auth-utils?tab=readme-ov-file#webauthn-passkey
 - https://github.com/barbapapazes/nuxt-authorization
 - https://github.com/atinux/nuxt-auth-utils/blob/main/playground/server/api/login.post.ts
+
+## MongoDB
+
+### Criptografia em Execução
+
+#### Shared Library
+
+- Informações em [Automatic Encryption Shared Library for Queryable Encryption](https://www.mongodb.com/docs/v7.0/core/queryable-encryption/reference/shared-library/#download-the-automatic-encryption-shared-library)
+- [Download das DLLs](https://www.mongodb.com/try/download/enterprise-advanced/releases)

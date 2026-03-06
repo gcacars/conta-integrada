@@ -23,9 +23,20 @@ export default defineNuxtConfig({
       },
     },
     mongoDb: {
-      uri: process.env.MONGO_URI || '',
-      dbName: process.env.MONGO_DB || 'conta-integrada-dev',
-      certPath: process.env.MONGO_CERT_PATH || '',
+      uri: process.env.MONGODB_URI || '',
+      dbName: process.env.MONGODB_DATA_DB || 'conta-integrada-dev',
+      certPath: process.env.MONGODB_CERT_PATH || '',
+      kmsProviderName: process.env.MONGODB_KMS_PROVIDER_NAME || 'gcp',
+      keyVaultDatabaseName: process.env.MONGODB_KEY_VAULT_DB_NAME || 'encryption',
+      keyVaultCollectionName: process.env.MONGODB_KEY_VAULT_COLLECTION_NAME || 'keyVault',
+      gcp: {
+        email: process.env.MONGODB_GCP_EMAIL,
+        privateKey: process.env.MONGODB_GCP_PRIVATE_KEY,
+        cmkProjectId: process.env.MONGODB_GCP_PROJECT_ID,
+        cmkLocation: process.env.MONGODB_CMK_LOCATION,
+        cmkKeyRing: process.env.MONGODB_CMK_KEY_RING,
+        cmkKeyName: process.env.MONGODB_CMK_KEY_NAME,
+      },
     },
   },
 
@@ -90,7 +101,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           additionalData: '@import "@modules/bootstrap/scss/_functions.scss"; @import "@/assets/styles/variables.scss"; @import "@modules/bootstrap/scss/_variables.scss"; @import "@modules/bootstrap/scss/_mixins.scss";',
-          silenceDeprecations: ['global-builtin', 'import'],
+          silenceDeprecations: ['global-builtin', 'import', 'color-functions', 'if-function'],
         },
       },
     },
