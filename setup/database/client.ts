@@ -48,7 +48,7 @@ async function getClient(userCertFile?: string): Promise<{
   return { client: normalClient, db };
 }
 
-async function getSecureClient(): Promise<{
+async function getSecureClient(userCertFile?: string): Promise<{
   client: MongoClient;
   clientEncryption: ClientEncryption;
   db: Db;
@@ -71,7 +71,7 @@ async function getSecureClient(): Promise<{
   );
 
   const encryptedClient = new MongoClient(uri, {
-    tlsCertificateKeyFile: process.env.MONGODB_CERT_PATH,
+    tlsCertificateKeyFile: userCertFile || process.env.MONGODB_CERT_PATH,
     autoEncryption: autoEncryptionOptions,
   });
 
