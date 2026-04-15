@@ -31,6 +31,7 @@
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "zod": "^4.3.5",
+    "zod-to-mongo-schema": "^1.1.2",
     "zodson": "^1.0.1"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { getSecureClient } from '../database/client.ts';
 import data from './conta-integrada-dev.categories.json' with { type: 'json' };
 import type { TransactionCategory } from '../../shared/types/transactions.ts';
-import { useKeyAltName } from "../../server/utils/key-alt-name.ts";
+import { getKeyAltName } from "../../server/utils/key-alt-name.ts";
 
 interface TransactionCategoryDb extends Omit<TransactionCategory, 'name' | '_id' | 'parentId' | 'userId'> {
   name: Binary,
@@ -17,7 +17,7 @@ async function load(userId: string) {
 
   const { db, clientEncryption } = await getSecureClient();
   const coll = db.collection<TransactionCategoryDb>('categories');
-  const keyAltName = useKeyAltName(userId);
+  const keyAltName = getKeyAltName(userId);
   const documents: TransactionCategoryDb[] = [];
 
   async function mapData(d: TransactionCategory): Promise<TransactionCategoryDb> {

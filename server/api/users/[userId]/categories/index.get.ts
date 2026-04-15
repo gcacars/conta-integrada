@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, message: 'Forbidden' });
   }
 
-  const db = await useDatabase();
+  const { db } = await useSecureClient();
   const collection = db.collection('categories');
 
   return collection.find({ userId: ObjectId.createFromHexString(user.id) }).toArray();

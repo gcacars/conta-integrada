@@ -8,5 +8,5 @@ export interface User extends AuditableRecord {
 }
 
 export interface DocumentOwner {
-  userId: ObjectId,
+  userId: string,
 }

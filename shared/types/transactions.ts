@@ -54,6 +54,7 @@ export interface Transaction extends DocumentOwner {
   destinationType?: AccountType | null;
   tags?: string[];
   attachmentsCount: number;
+  hasRecurrence: boolean;
   recurrence?: TransactionRecurrence;
   createdAt: Date;
   updatedAt?: Date;

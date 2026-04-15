@@ -1,5 +1,5 @@
 import { getSecureClient } from '../database/client.ts';
-import { useKeyAltName } from "../../server/utils/key-alt-name.ts";
+import { getKeyAltName } from "../../server/utils/key-alt-name.ts";
 import type { User } from '../../shared/types/user.ts';
 
 async function load(): Promise<string | null> {
@@ -24,7 +24,7 @@ async function load(): Promise<string | null> {
   }
 
   // Criar DEK
-  const keyAltName = useKeyAltName(adminUser?._id.toString() || '');
+  const keyAltName = getKeyAltName(adminUser?._id.toString() || '');
   const existingDek = await client.db('encryption').collection('keyVault')
     .findOne({ keyAltNames: keyAltName });
 

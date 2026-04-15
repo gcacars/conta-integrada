@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, postSchema.parse) as z.output<typeof postSchema> as Partial<Transaction>;
 
   try {
-    body.userId = ObjectId.createFromHexString(user.id);
+    body.userId = user.id;
 
     const id = await repository.insertTransaction(body);
 
