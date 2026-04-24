@@ -115,6 +115,7 @@ async function submit() {
       method: props.id === 'new' ? 'PUT' : 'PATCH',
       body: {
         ...transaction.value,
+        datePrecision: 'DATE',
         amount: {
           amountInCents: formAmount.value ? Math.round(formAmount.value * 100) : 0,
           currency: transaction.value.amount.currency,
@@ -123,7 +124,7 @@ async function submit() {
         sourceType: formSource.value ? formSource.value.type as Account['type'] : undefined,
         destinationId: formDestination.value ? formDestination.value._id || null : null,
         destinationType: formDestination.value ? formDestination.value.type as Account['type'] : undefined,
-      },
+      } as Transaction,
     });
 
     systemStore.addMessage(

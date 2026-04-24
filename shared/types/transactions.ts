@@ -43,6 +43,7 @@ export interface TransactionCategory {
 export interface Transaction extends DocumentOwner {
   _id: string;
   date: Date;
+  datePrecision: 'DATE' | 'DATETIME',
   description: string;
   amount: Money;
   type: TransactionType;
@@ -59,4 +60,9 @@ export interface Transaction extends DocumentOwner {
   createdAt: Date;
   updatedAt?: Date;
   conciliationId?: string | null;
+}
+
+export interface UserTransactionsRequestQuery {
+  dateStart: string;
+  dateEnd?: string;
 }

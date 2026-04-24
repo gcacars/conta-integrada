@@ -1,39 +1,44 @@
 <script setup lang="ts">
-import rawData from '../transactions.json'; // with { type: 'json' };
+import { useUserTransactions } from '~/api/transactions';
 
 definePageMeta({
   middleware: ['authenticated'],
 });
 
+const loading = ref(true);
 const selectedTx = ref<string | null>(null);
+const transactions = ref<Transaction[]>([]);
 
-interface OrganizzeTransaction {
-  hasMoreItems: boolean;
-  transactions: Array<{
-    id: string;
-    date: string;
-    description: string;
-    amountInCents: number;
-    done: boolean;
-  }>;
+async function load() {
+  loading.value = true;
+
+  try {
+    const { user } = useUserSession();
+
+    if (!user || !user.value?.id) throw new Error('User not found in session');
+
+    transactions.value = await useUserTransactions(user.value.id, {
+      dateStart: '2026-01-01T00:00:00Z',
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
-type TxItem = OrganizzeTransaction['transactions'][number];
-
-const transactions = (rawData as OrganizzeTransaction).transactions as TxItem[];
-
 const groupedTransactions = computed(() => {
-  const map = transactions.reduce((acc: Record<string, TxItem[]>, tx) => {
-    const d = tx.date;
+  const map = transactions.value.reduce((acc: Record<string, Transaction[]>, tx) => {
+    const d = tx.date.toISOString().slice(0, 10);
     if (!acc[d]) acc[d] = [];
     acc[d].push(tx);
     return acc;
-  }, {} as Record<string, TxItem[]>);
+  }, {} as Record<string, Transaction[]>);
 
   return Object.keys(map)
     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
     .map(date => ({ date, items: map[date] }));
 });
+
+load();
 </script>
 
 <template>
@@ -73,21 +78,21 @@ const groupedTransactions = computed(() => {
 
     <div v-for="tx in groupedTransactions" :key="tx.date" class="mt-4">
       <h5 class="mb-3">
-        {{ new Date(`${tx.date}T00:00:00`).toLocaleDateString(undefined, { day: '2-digit', month: 'long' }) }}</h5>
+        {{ new Date(tx.date).toLocaleDateString(undefined, { day: '2-digit', month: 'long' }) }}</h5>
       <div class="list-group bg-white shadow-sm">
-        <div v-for="item in tx.items" :key="item.id"
+        <div v-for="item in tx.items" :key="item._id"
              class="list-group-item d-flex justify-content-between align-items-center bg-transparent border border-2 border-top-0 border-end-0 border-bottom-0"
              :class="{
-               'border-danger': !item.done && new Date(`${item.date}T00:00:00`).getTime() < Date.now() && item.amountInCents < 0,
-               'border-warning': !item.done && new Date(`${item.date}T00:00:00`).getTime() < Date.now() && item.amountInCents > 0,
-               'border-success': item.done,
+               'border-danger': item.status !== 'CONFIRMED' && item.date.getTime() < Date.now() && item.amount.amountInCents < 0,
+               'border-warning': item.status !== 'CONFIRMED' && item.date.getTime() < Date.now() && item.amount.amountInCents > 0,
+               'border-success': item.status === 'CONFIRMED',
              }">
           <div>
             <h6 class="mb-1">{{ item.description }}</h6>
-            <small class="text-muted">{{ relativeTimeHelper(new Date(`${item.date}T00:00:00`)) }}</small>
+            <small class="text-muted">{{ relativeTimeHelper(item.date) }}</small>
           </div>
-          <span :class="item.amountInCents < 0 ? 'text-danger' : 'text-success'">
-            {{ new Intl.NumberFormat(undefined, { style: 'currency', currency: 'BRL' }).format(item.amountInCents / 100) }}
+          <span :class="item.amount.amountInCents < 0 ? 'text-danger' : 'text-success'">
+            {{ new Intl.NumberFormat(undefined, { style: 'currency', currency: 'BRL' }).format(item.amount.amountInCents / 100) }}
           </span>
         </div>
       </div>

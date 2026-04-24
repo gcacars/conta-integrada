@@ -5,12 +5,14 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const api = $fetch.create({
     baseURL: 'http://localhost:3000/api',
+
     onRequest({ request, options, error }) {
       options.headers.set('X-Correlation-ID', crypto.randomUUID())
       options.headers.set('X-User-ID', session.value?.id || '')
 
       if (error) console.error('API Request Error:', error)
     },
+
     async onResponseError({ response, error }) {
       const systemStore = useSystemStore()
 
@@ -35,6 +37,10 @@ export default defineNuxtPlugin((nuxtApp) => {
           5
         )
       }
+    },
+
+    async onResponse({ request, response, options }) {
+      console.log("[fetch response]", request, response.status);
     },
   })
 

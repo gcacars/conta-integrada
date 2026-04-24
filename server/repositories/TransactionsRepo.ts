@@ -9,7 +9,8 @@ import type { Transaction } from "../../shared/types/transactions.ts";
 export const transactionsSchema = z.object({
   userId: zodObjectId,
   _id: zodObjectId,
-  date: zodBsonEncrypt,
+  date: zodBsonDatetime,
+  datePrecision: z.enum(['DATE', 'DATETIME']),
   description: zodBsonEncrypt,
   amount: zodBsonEncrypt,
   type: z.enum(['EXPENSE', 'INCOME', 'TRANSFER', 'INVESTMENT', 'DIVIDEND', 'INTEREST', 'TAX', 'REFUND', 'ADJUSTMENT', 'CONTRIBUTION', 'REDEMPTION']),
@@ -66,10 +67,10 @@ class TransactionsRepo {
     }
   }
 
-  async getTransactionById(userId: ObjectId, transactionId: string | ObjectId): Promise<TransactionSchema | null> {
+  async getTransactionById(userId: string | ObjectId, transactionId: string | ObjectId): Promise<TransactionSchema | null> {
     const { collection } = await this.#getCollection();
     return collection.findOne({
-      userId,
+      userId: userId instanceof ObjectId ? userId : ObjectId.createFromHexString(userId),
       _id: transactionId instanceof ObjectId ? transactionId : ObjectId.createFromHexString(transactionId),
     });
   }
@@ -87,7 +88,7 @@ class TransactionsRepo {
 
   #getCollection = async (): Promise<{ collection: Collection<TransactionSchema>, clientEncryption: ClientEncryption }> => {
     const { db, clientEncryption } = await useSecureClient();
-    const collection = db.collection('transactions2') as Collection<TransactionSchema>;
+    const collection = db.collection('transactions') as Collection<TransactionSchema>;
     return { collection, clientEncryption };
   }
 
@@ -99,6 +100,7 @@ class TransactionsRepo {
       ...transaction,
 
       tags: transaction.tags || [],
+      datePrecision: transaction.datePrecision || 'DATETIME',
       hasRecurrence: !!transaction.recurrence,
       createdAt: new Date(),
 
@@ -120,10 +122,6 @@ class TransactionsRepo {
       }),
       amount: await clientEncryption.encrypt(transaction.amount, {
         algorithm: 'AEAD_AES_256_CBC_HMAC_SHA_512-Random',
-        keyAltName,
-      }),
-      date: await clientEncryption.encrypt(transaction.date || new Date(), {
-        algorithm: 'AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic',
         keyAltName,
       }),
       recurrence: await clientEncryption.encrypt(transaction.recurrence || {}, {
