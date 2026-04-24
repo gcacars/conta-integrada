@@ -45,7 +45,7 @@ onMounted(async () => {
               class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
               data-bs-toggle="dropdown" aria-expanded="false">
               <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle me-2">
-              <span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ user?.name }}</span>
+              <span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ user?.name?.split(' ')?.at(0) }}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end text-small" style="">
               <li><a class="dropdown-item" href="#">New project...</a></li>
